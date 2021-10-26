@@ -1,0 +1,69 @@
+version: '3.1'
+services:
+  # zookeeper:
+  #   image: debezium/zookeeper:1.2
+  #   ports:
+  #    - 2181:2181
+  #    - 2888:2888
+  #    - 3888:3888
+    
+  # kafka:
+  #   image: debezium/kafka:1.2
+  #   ports:
+  #    - 9092:9092
+  #   links:
+  #    - zookeeper
+  #   environment:
+  #    - ZOOKEEPER_CONNECT=zookeeper:2181
+  #   restart: always
+  # mysql:
+  #   image: debezium/example-mysql:1.2
+  #   command: --default-authentication-plugin=mysql_native_password
+  #   ports:
+  #    - 3306:3306
+  #   environment:
+  #    - MYSQL_ROOT_PASSWORD=debezium
+  #    - MYSQL_USER=mysqluser
+  #    - MYSQL_PASSWORD=mysqlpw
+  # connect:
+  #   image: debezium/connect:1.2
+  #   ports:
+  #    - 8083:8083
+  #   links:
+  #    - kafka
+  #    - mysql
+  #    - schema-registry
+  #   environment:
+  #    - BOOTSTRAP_SERVERS= kafka:9092
+  #    - GROUP_ID=1
+  #    - CONFIG_STORAGE_TOPIC=my_connect_configs
+  #    - OFFSET_STORAGE_TOPIC=my_connect_offsets
+  #    - KEY_CONVERTER=io.confluent.connect.avro.AvroConverter
+  #    - VALUE_CONVERTER=io.confluent.connect.avro.AvroConverter
+  #    - CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
+  #    - CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
+     
+  # schema-registry:
+  #   image: confluentinc/cp-schema-registry:5.5.1
+  #   hostname: schema-registry
+  #   container_name: schema-registry
+  #   environment:
+  #     - SCHEMA_REGISTRY_HOST_NAME=schema-registry
+  #     - SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL=zookeeper:2181
+  #     - SCHEMA_REGISTRY_LISTENERS=http://schema-registry:8081
+
+  #   depends_on:
+  #     - zookeeper
+  #     - kafka
+  #   ports:
+  #     - 8081:8081
+  kafka_manager:
+    image: hlebalbau/kafka-manager:stable
+    # depends_on:
+    #   - zookeeper
+    restart: always
+    # ports:
+    #   - "9001:9000"
+    network_mode: host
+    environment:
+      ZK_HOSTS: "0.0.0.0:2181"
