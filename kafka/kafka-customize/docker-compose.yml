@@ -1,0 +1,55 @@
+version: '2'
+services:
+  zookeeper:
+    image: debezium/zookeeper:latest
+    ports:
+     - 2181:2181
+     - 2888:2888
+     - 3888:3888
+  kafka:
+    image: debezium/kafka:latest
+    ports:
+     - 9092:9092
+    links:
+     - zookeeper
+    environment:
+     - ZOOKEEPER_CONNECT=zookeeper:2181
+     - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+  mysql:
+    image: debezium/example-mysql:1.2
+    ports:
+     - 3306:3306
+    environment:
+     - MYSQL_ROOT_PASSWORD=debezium
+     - MYSQL_USER=mysqluser
+     - MYSQL_PASSWORD=mysqlpw
+  postgres:
+    image: debezium/postgres:9.6
+    ports:
+     - "5432:5432"
+    environment:
+     - POSTGRES_USER=postgresuser
+     - POSTGRES_PASSWORD=postgrespw
+     - POSTGRES_DB=inventory
+  schema-registry:
+    image: confluentinc/cp-schema-registry:5.5.1
+    ports:
+     - 8181:8181
+     - 8081:8081
+    environment:
+     - SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL=zookeeper:2181
+     - SCHEMA_REGISTRY_HOST_NAME=schema-registry
+     - SCHEMA_REGISTRY_LISTENERS=http://schema-registry:8081
+     - SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_METHODS=GET,POST,PUT,OPTIONS
+     - SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_ORIGIN=*
+    links:
+     - zookeeper
+  schema-registry-ui:
+    image: landoop/schema-registry-ui
+    ports:
+     - 8000:8000
+    environment:
+     - SCHEMAREGISTRY_URL=http://schema-registry:8081
+     - PROXY=true
+    links:
+     - schema-registry
