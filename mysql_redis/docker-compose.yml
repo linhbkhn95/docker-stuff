@@ -2,22 +2,22 @@
 version: "3.7"
 
 services:
-  mysql:
-    image: mysql:8.0
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./config/mysql/mysql.cnf:/etc/mysql.cnf:ro
-      - ./data/mysql:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: "root"
-    restart: unless-stopped
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./data/mongo:/data/db
+  # mysql:
+  #   image: mysql:8.0
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - ./config/mysql/mysql.cnf:/etc/mysql.cnf:ro
+  #     - ./data/mysql:/var/lib/mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: "root"
+  #   restart: unless-stopped
+  # mongo:
+  #   image: mongo:latest
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - ./data/mongo:/data/db
 
   redis:
     image: redis:alpine
